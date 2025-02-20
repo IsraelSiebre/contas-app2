@@ -105,14 +105,15 @@ public class MenuPrincipal extends JFrame {
 
     private void adicionarItensMenuRelatorios(JMenu menu) {
         JMenuItem itemRelatorioDRE = new JMenuItem("DRE");
-        JMenuItem itemRelatorioBalanco = new JMenuItem("Balanço Patrimonial");
+        JMenuItem itemRelatorioBalancoPatrimonial = new JMenuItem("Balanço Patrimonial");
         JMenuItem itemRelatorioBalancete = new JMenuItem("Balancete");
         JMenuItem itemRelatorioIndices = new JMenuItem("Índices");
 
         itemRelatorioDRE.addActionListener(_ -> abrirTela(new TelaDRE()));
+        itemRelatorioBalancoPatrimonial.addActionListener(_ -> abrirTela(new TelaBalancoPatrimonial()));
 
         menu.add(itemRelatorioDRE);
-        menu.add(itemRelatorioBalanco);
+        menu.add(itemRelatorioBalancoPatrimonial);
         menu.add(itemRelatorioBalancete);
         menu.add(itemRelatorioIndices);
     }

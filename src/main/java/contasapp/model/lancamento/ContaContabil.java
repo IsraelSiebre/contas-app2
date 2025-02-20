@@ -9,9 +9,9 @@ public enum ContaContabil {
     CONTAS_A_RECEBER("Contas a Receber", "1.1.3", "Ativo", "Circulante"),
     ESTOQUES("Estoques", "1.1.4", "Ativo", "Circulante"),
     ADIANTAMENTOS("Adiantamentos", "1.1.5", "Ativo", "Circulante"),
-    APLICAÇÕES_FINANCEIRAS("Aplicações Financeiras", "1.1.6", "Ativo", "Circulante"),
+    APLICACOES_FINANCEIRAS("Aplicações Financeiras", "1.1.6", "Ativo", "Circulante"),
     IMPOSTOS_A_RECUPERAR("Impostos a Recuperar", "1.1.7", "Ativo", "Circulante"),
-    DESPESAS_PREVISTAS("Despesas Previstasa", "1.1.8", "Ativo", "Circulante"),
+    DESPESAS_PREVISTAS("Despesas Previstas", "1.1.8", "Ativo", "Circulante"),
 
     // ATIVO - NÃO CIRCULANTE
     IMOBILIZADO("Imobilizado", "1.2.1", "Ativo", "Não Circulante"),
@@ -19,7 +19,7 @@ public enum ContaContabil {
     APLICACOES_LONGO_PRAZO("Aplicações a Longo Prazo", "1.2.3", "Ativo", "Não Circulante"),
     INVESTIMENTOS("Investimentos", "1.2.4", "Ativo", "Não Circulante"),
     PROPRIEDADES_INVESTIDAS("Propriedades Investidas", "1.2.5", "Ativo", "Não Circulante"),
-    ATIVO_DEFERIDO("Ativo Diferido", "1.2.6", "Ativo", "Não Circulante"),
+    ATIVO_DIFERIDO("Ativo Diferido", "1.2.6", "Ativo", "Não Circulante"),
 
     // PASSIVO - CIRCULANTE
     FORNECEDORES("Fornecedores", "2.1.1", "Passivo", "Circulante"),
@@ -45,7 +45,7 @@ public enum ContaContabil {
     RESERVA_ESTATUTARIA("Reserva Estatutária", "3.3.3", "PL", null),
     AJUSTES_A_VALOR_PATRIMONIAL("Ajustes a Valor Patrimonial", "3.4.1", "PL", null),
     PREVISAO_DIVIDENDOS("Previsão de Dividendos", "3.5.1", "PL", null),
-    AJUSTES_CAMBIA("Ajustes de Câmbio", "3.6.1", "PL", null),
+    AJUSTES_CAMBIO("Ajustes de Câmbio", "3.6.1", "PL", null),
 
     // RECEITAS
     RECEITAS_OPERACIONAIS("Receitas Operacionais", "4.1.1", "Resultado", "Receita"),

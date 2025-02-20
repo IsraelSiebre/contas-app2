@@ -1,12 +1,13 @@
 package contasapp.view;
 
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
 import contasapp.relatorios.DRE;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,9 +38,9 @@ public class TelaDRE extends JPanel {
         adicionarEspacamento();
 
         // RECEITAS OPERACIONAIS
-        adicionarSecao("1. RECEITAS", true);
+        adicionarSecao("1. RECEITAS");
 
-        adicionarSecao("1.1 Receitas Operacionais", true);
+        adicionarSecao("1.1 Receitas Operacionais");
         adicionarLinha("Receitas Operacionais", dre.getReceitaOperacional(), false);
         adicionarLinha("Receita de Vendas", dre.getReceitaVendas(), false);
         adicionarLinha("Receita de Serviços", dre.getReceitaServicos(), false);
@@ -47,7 +48,7 @@ public class TelaDRE extends JPanel {
         adicionarEspacamento();
 
         // OUTRAS RECEITAS
-        adicionarSecao("1.2 Outras Receitas", true);
+        adicionarSecao("1.2 Outras Receitas");
         adicionarLinha("Receitas Não Operacionais", dre.getReceitasNaoOperacionais(), false);
         adicionarLinha("Receitas Financeiras", dre.getReceitasFinanceiras(), false);
         adicionarLinha("Outras Receitas", dre.getOutrasReceitas(), false);
@@ -60,16 +61,16 @@ public class TelaDRE extends JPanel {
         adicionarEspacamento();
 
         // CUSTOS
-        adicionarSecao("(-) Custo das Mercadorias/Serviços", true);
+        adicionarSecao("(-) Custo das Mercadorias/Serviços");
         adicionarLinha("Custo das Mercadorias/Serviços", dre.getDespesasCompras(), false);
         adicionarLinha("Lucro Bruto", dre.calcularLucroBruto(), true);
 
         adicionarEspacamento();
 
         // DESPESAS OPERACIONAIS
-        adicionarSecao("2. DESPESAS", true);
+        adicionarSecao("2. DESPESAS");
 
-        adicionarSecao("2.1 Despesas Operacionais", true);
+        adicionarSecao("2.1 Despesas Operacionais");
         adicionarLinha("Despesas com Compras", dre.getDespesasCompras(), false);
         adicionarLinha("Despesas com Vendas", dre.getDespesasVendas(), false);
         adicionarLinha("Despesas Administrativas", dre.getDespesasAdministrativas(), false);
@@ -79,13 +80,13 @@ public class TelaDRE extends JPanel {
         adicionarEspacamento();
 
         // DESPESAS NÃO OPERACIONAIS
-        adicionarSecao("2.2 Despesas Não Operacionais", true);
+        adicionarSecao("2.2 Despesas Não Operacionais");
         adicionarLinha("Despesas Não Operacionais", dre.getDespesasNaoOperacionais(), false);
 
         adicionarEspacamento();
 
         // RESULTADO FINANCEIRO
-        adicionarSecao("RESULTADO FINANCEIRO", true);
+        adicionarSecao("RESULTADO FINANCEIRO");
         adicionarLinha("Receitas Financeiras", dre.getReceitasFinanceiras(), false);
         adicionarLinha("(-) Despesas Financeiras", dre.getDespesasFinanceiras(), false);
         adicionarLinha("Resultado Antes dos Impostos", dre.calcularResultadoAntesImpostos(), true);
@@ -93,14 +94,14 @@ public class TelaDRE extends JPanel {
         adicionarEspacamento();
 
         // IMPOSTOS
-        adicionarSecao("(-) Impostos sobre o Lucro", true);
+        adicionarSecao("(-) Impostos sobre o Lucro");
         adicionarLinha("Imposto de Renda e Contribuição Social", dre.getDespesasTributarias(), false);
         adicionarLinha("Lucro Líquido", dre.calcularLucroLiquido(), true);
 
         adicionarEspacamento();
     }
 
-    private void adicionarSecao(String titulo, boolean isNegrito) {
+    private void adicionarSecao(String titulo) {
         JPanel painelTitulo = new JPanel(new FlowLayout(FlowLayout.LEFT));  // Alinhamento à esquerda
         JLabel label = new JLabel(titulo);
         label.setFont(new Font("Arial", Font.BOLD, 14));
@@ -133,75 +134,73 @@ public class TelaDRE extends JPanel {
 
     // Método para exportar o conteúdo para PDF
     public void exportarParaPDF(DRE dre) {
-        // Criar um JFileChooser para escolher o local de salvamento
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Salvar PDF");
-        fileChooser.setSelectedFile(new File("DRE.pdf")); // Nome padrão do arquivo
+        try {
+            // Criar JFileChooser para escolher o local e nome do arquivo
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Salvar PDF");
+            fileChooser.setSelectedFile(new File("DRE.pdf"));
+            fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("PDF Files", "pdf"));
 
-        // Filtrar apenas arquivos PDF
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("PDF Files", "pdf"));
-
-        // Mostrar o diálogo e verificar se o usuário clicou em "Salvar"
-        int userSelection = fileChooser.showSaveDialog(this);
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = fileChooser.getSelectedFile();
-            String caminhoArquivo = fileToSave.getAbsolutePath();
-
-            // Adicionar a extensão .pdf se não estiver presente
-            if (!caminhoArquivo.toLowerCase().endsWith(".pdf")) {
-                caminhoArquivo += ".pdf";
+            int userSelection = fileChooser.showSaveDialog(this);
+            if (userSelection != JFileChooser.APPROVE_OPTION) {
+                return; // Se o usuário cancelar, não faz nada
             }
 
-            // Criação do documento PDF
-            try {
-                PdfWriter writer = new PdfWriter(caminhoArquivo);
-                PdfDocument pdf = new PdfDocument(writer);
-                Document document = new Document(pdf);
-
-                // Adicionando título
-                document.add(new Paragraph("Demonstração do Resultado do Exercício (DRE)").setFontSize(18).setBold());
-
-                // Adicionando conteúdo
-                document.add(new Paragraph("1. RECEITAS").setBold());
-                document.add(new Paragraph("Receitas Operacionais: R$ " + df.format(dre.getReceitaOperacional())));
-                document.add(new Paragraph("Receita de Vendas: R$ " + df.format(dre.getReceitaVendas())));
-                document.add(new Paragraph("Receita de Serviços: R$ " + df.format(dre.getReceitaServicos())));
-                document.add(new Paragraph("Receitas Não Operacionais: R$ " + df.format(dre.getReceitasNaoOperacionais())));
-                document.add(new Paragraph("Receitas Financeiras: R$ " + df.format(dre.getReceitasFinanceiras())));
-                document.add(new Paragraph("Outras Receitas: R$ " + df.format(dre.getOutrasReceitas())));
-                document.add(new Paragraph("Receita Líquida: R$ " + df.format(dre.calcularReceitaLiquida())));
-                document.add(new Paragraph("(-) Custo das Mercadorias/Serviços").setBold());
-                document.add(new Paragraph("Custo das Mercadorias/Serviços: R$ " + df.format(dre.getDespesasCompras())));
-                document.add(new Paragraph("Lucro Bruto: R$ " + df.format(dre.calcularLucroBruto())));
-
-                document.add(new Paragraph("2. DESPESAS").setBold());
-                document.add(new Paragraph("2.1 Despesas Operacionais").setBold());
-                document.add(new Paragraph("Despesas com Compras: R$ " + df.format(dre.getDespesasCompras())));
-                document.add(new Paragraph("Despesas com Vendas: R$ " + df.format(dre.getDespesasVendas())));
-                document.add(new Paragraph("Despesas Administrativas: R$ " + df.format(dre.getDespesasAdministrativas())));
-                document.add(new Paragraph("Despesas Operacionais Outras: R$ " + df.format(dre.getDespesasOperacionaisOutras())));
-                document.add(new Paragraph("Resultado Operacional: R$ " + df.format(dre.calcularResultadoOperacional())));
-
-                document.add(new Paragraph("2.2 Despesas Não Operacionais").setBold());
-                document.add(new Paragraph("Despesas Não Operacionais: R$ " + df.format(dre.getDespesasNaoOperacionais())));
-
-                document.add(new Paragraph("RESULTADO FINANCEIRO").setBold());
-                document.add(new Paragraph("Receitas Financeiras: R$ " + df.format(dre.getReceitasFinanceiras())));
-                document.add(new Paragraph("(-) Despesas Financeiras: R$ " + df.format(dre.getDespesasFinanceiras())));
-                document.add(new Paragraph("Resultado Antes dos Impostos: R$ " + df.format(dre.calcularResultadoAntesImpostos())));
-
-                document.add(new Paragraph("(-) Impostos sobre o Lucro").setBold());
-                document.add(new Paragraph("Imposto de Renda e Contribuição Social: R$ " + df.format(dre.getDespesasTributarias())));
-                document.add(new Paragraph("Lucro Líquido: R$ " + df.format(dre.calcularLucroLiquido())));
-
-                // Fechar o documento
-                document.close();
-
-                JOptionPane.showMessageDialog(this, "PDF exportado com sucesso para: " + caminhoArquivo);
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Erro ao exportar PDF: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            File arquivoSalvar = fileChooser.getSelectedFile();
+            if (!arquivoSalvar.getName().endsWith(".pdf")) {
+                arquivoSalvar = new File(arquivoSalvar.getAbsolutePath() + ".pdf");
             }
+
+            PdfWriter writer = new PdfWriter(arquivoSalvar);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf, PageSize.A4);
+
+            // Adicionar título
+            document.add(new Paragraph("Demonstração do Resultado do Exercício (DRE)").setFontSize(18).setBold());
+
+            // Adicionando Receitas
+            document.add(new Paragraph("1. RECEITAS").setBold());
+            document.add(new Paragraph("Receitas Operacionais: R$ " + df.format(dre.getReceitaOperacional())));
+            document.add(new Paragraph("Receita de Vendas: R$ " + df.format(dre.getReceitaVendas())));
+            document.add(new Paragraph("Receita de Serviços: R$ " + df.format(dre.getReceitaServicos())));
+            document.add(new Paragraph("Receitas Não Operacionais: R$ " + df.format(dre.getReceitasNaoOperacionais())));
+            document.add(new Paragraph("Receitas Financeiras: R$ " + df.format(dre.getReceitasFinanceiras())));
+            document.add(new Paragraph("Outras Receitas: R$ " + df.format(dre.getOutrasReceitas())));
+            document.add(new Paragraph("Receita Líquida: R$ " + df.format(dre.calcularReceitaLiquida())));
+
+            // Adicionando Custo das Mercadorias/Serviços
+            document.add(new Paragraph("(-) Custo das Mercadorias/Serviços").setBold());
+            document.add(new Paragraph("Custo das Mercadorias/Serviços: R$ " + df.format(dre.getDespesasCompras())));
+            document.add(new Paragraph("Lucro Bruto: R$ " + df.format(dre.calcularLucroBruto())));
+
+            // Adicionando Despesas
+            document.add(new Paragraph("2. DESPESAS").setBold());
+            document.add(new Paragraph("2.1 Despesas Operacionais").setBold());
+            document.add(new Paragraph("Despesas com Compras: R$ " + df.format(dre.getDespesasCompras())));
+            document.add(new Paragraph("Despesas com Vendas: R$ " + df.format(dre.getDespesasVendas())));
+            document.add(new Paragraph("Despesas Administrativas: R$ " + df.format(dre.getDespesasAdministrativas())));
+            document.add(new Paragraph("Despesas Operacionais Outras: R$ " + df.format(dre.getDespesasOperacionaisOutras())));
+            document.add(new Paragraph("Resultado Operacional: R$ " + df.format(dre.calcularResultadoOperacional())));
+
+            document.add(new Paragraph("2.2 Despesas Não Operacionais").setBold());
+            document.add(new Paragraph("Despesas Não Operacionais: R$ " + df.format(dre.getDespesasNaoOperacionais())));
+
+            // Adicionando Resultado Financeiro
+            document.add(new Paragraph("RESULTADO FINANCEIRO").setBold());
+            document.add(new Paragraph("Receitas Financeiras: R$ " + df.format(dre.getReceitasFinanceiras())));
+            document.add(new Paragraph("(-) Despesas Financeiras: R$ " + df.format(dre.getDespesasFinanceiras())));
+            document.add(new Paragraph("Resultado Antes dos Impostos: R$ " + df.format(dre.calcularResultadoAntesImpostos())));
+
+            // Adicionando Impostos
+            document.add(new Paragraph("(-) Impostos sobre o Lucro").setBold());
+            document.add(new Paragraph("Imposto de Renda e Contribuição Social: R$ " + df.format(dre.getDespesasTributarias())));
+            document.add(new Paragraph("Lucro Líquido: R$ " + df.format(dre.calcularLucroLiquido())));
+
+            document.close();
+            JOptionPane.showMessageDialog(this, "DRE exportada com sucesso!");
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "Erro ao criar o arquivo PDF: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 }
