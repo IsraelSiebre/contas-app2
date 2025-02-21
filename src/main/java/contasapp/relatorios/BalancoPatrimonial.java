@@ -52,52 +52,46 @@ public class BalancoPatrimonial {
     }
 
     public void calcularSaldos() {
-        this.caixa = calcularSaldoFinal(ContaContabil.CAIXA);
-        this.bancos = calcularSaldoFinal(ContaContabil.BANCOS);
-        this.contasAReceber = calcularSaldoFinal(ContaContabil.CONTAS_A_RECEBER);
-        this.estoques = calcularSaldoFinal(ContaContabil.ESTOQUES);
-        this.adiantamentos = calcularSaldoFinal(ContaContabil.ADIANTAMENTOS);
-        this.aplicacoesFinanceiras = calcularSaldoFinal(ContaContabil.APLICACOES_FINANCEIRAS);
-        this.impostosARecuperar = calcularSaldoFinal(ContaContabil.IMPOSTOS_A_RECUPERAR);
-        this.despesasPrevistas = calcularSaldoFinal(ContaContabil.DESPESAS_PREVISTAS);
+        this.caixa = dbManager.buscarTotalDaConta(ContaContabil.CAIXA);
+        this.bancos = dbManager.buscarTotalDaConta(ContaContabil.BANCOS);
+        this.contasAReceber = dbManager.buscarTotalDaConta(ContaContabil.CONTAS_A_RECEBER);
+        this.estoques = dbManager.buscarTotalDaConta(ContaContabil.ESTOQUES);
+        this.adiantamentos = dbManager.buscarTotalDaConta(ContaContabil.ADIANTAMENTOS);
+        this.aplicacoesFinanceiras = dbManager.buscarTotalDaConta(ContaContabil.APLICACOES_FINANCEIRAS);
+        this.impostosARecuperar = dbManager.buscarTotalDaConta(ContaContabil.IMPOSTOS_A_RECUPERAR);
+        this.despesasPrevistas = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_PREVISTAS);
 
-        this.imobilizado = calcularSaldoFinal(ContaContabil.IMOBILIZADO);
-        this.intangivel = calcularSaldoFinal(ContaContabil.INTANGIVEL);
-        this.aplicacoesLongoPrazo = calcularSaldoFinal(ContaContabil.APLICACOES_LONGO_PRAZO);
-        this.investimentos = calcularSaldoFinal(ContaContabil.INVESTIMENTOS);
-        this.propriedadesInvestidas = calcularSaldoFinal(ContaContabil.PROPRIEDADES_INVESTIDAS);
-        this.ativoDiferido = calcularSaldoFinal(ContaContabil.ATIVO_DIFERIDO);
+        this.imobilizado = dbManager.buscarTotalDaConta(ContaContabil.IMOBILIZADO);
+        this.intangivel = dbManager.buscarTotalDaConta(ContaContabil.INTANGIVEL);
+        this.aplicacoesLongoPrazo = dbManager.buscarTotalDaConta(ContaContabil.APLICACOES_A_LONGO_PRAZO);
+        this.investimentos = dbManager.buscarTotalDaConta(ContaContabil.INVESTIMENTOS);
+        this.propriedadesInvestidas = dbManager.buscarTotalDaConta(ContaContabil.PROPRIEDADES_INVESTIDAS);
+        this.ativoDiferido = dbManager.buscarTotalDaConta(ContaContabil.ATIVO_DIFERIDO);
 
-        this.fornecedores = calcularSaldoFinal(ContaContabil.FORNECEDORES);
-        this.emprestimosBancarios = calcularSaldoFinal(ContaContabil.EMPRESTIMOS_BANCARIOS);
-        this.obrigacoesFiscais = calcularSaldoFinal(ContaContabil.OBRIGACOES_FISCAIS);
-        this.provisoes = calcularSaldoFinal(ContaContabil.PROVISOES);
-        this.dividendosAPagar = calcularSaldoFinal(ContaContabil.DIVIDENDOS_A_PAGAR);
-        this.obrigacaoTributaria = calcularSaldoFinal(ContaContabil.OBRIGACAO_TRIBUTARIA);
-        this.salariosAPagar = calcularSaldoFinal(ContaContabil.SALARIOS_A_PAGAR);
-        this.despesasAPagar = calcularSaldoFinal(ContaContabil.DESPESAS_A_PAGAR);
-        this.outrasObrigacoes = calcularSaldoFinal(ContaContabil.OUTRAS_OBRIGACOES);
+        this.fornecedores = dbManager.buscarTotalDaConta(ContaContabil.FORNECEDORES);
+        this.emprestimosBancarios = dbManager.buscarTotalDaConta(ContaContabil.EMPRESTIMOS_BANCARIOS);
+        this.obrigacoesFiscais = dbManager.buscarTotalDaConta(ContaContabil.OBRIGACOES_FISCAIS);
+        this.provisoes = dbManager.buscarTotalDaConta(ContaContabil.PROVISOES);
+        this.dividendosAPagar = dbManager.buscarTotalDaConta(ContaContabil.DIVIDENDOS_A_PAGAR);
+        this.obrigacaoTributaria = dbManager.buscarTotalDaConta(ContaContabil.OBRIGACAO_TRIBUTARIA);
+        this.salariosAPagar = dbManager.buscarTotalDaConta(ContaContabil.SALARIOS_A_PAGAR);
+        this.despesasAPagar = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_A_PAGAR);
+        this.outrasObrigacoes = dbManager.buscarTotalDaConta(ContaContabil.OUTRAS_OBRIGACOES);
 
-        this.obrigacaoLongoPrazo = calcularSaldoFinal(ContaContabil.OBRIGACAO_LONGO_PRAZO);
-        this.financiamento = calcularSaldoFinal(ContaContabil.FINANCIAMENTO);
-        this.emprestimosLongoPrazo = calcularSaldoFinal(ContaContabil.EMPRESTIMOS_LONGO_PRAZO);
+        this.obrigacaoLongoPrazo = dbManager.buscarTotalDaConta(ContaContabil.OBRIGACAO_DE_LONGO_PRAZO);
+        this.financiamento = dbManager.buscarTotalDaConta(ContaContabil.FINANCIAMENTO_DE_LONGO_PRAZO);
+        this.emprestimosLongoPrazo = dbManager.buscarTotalDaConta(ContaContabil.EMPRESTIMOS_DE_LONGO_PRAZO);
 
-        this.capitalSocial = calcularSaldoFinal(ContaContabil.CAPITAL_SOCIAL);
-        this.lucrosAcumulados = calcularSaldoFinal(ContaContabil.LUCROS_ACUMULADOS);
-        this.reservas = calcularSaldoFinal(ContaContabil.RESERVAS);
-        this.reservaLegal = calcularSaldoFinal(ContaContabil.RESERVA_LEGAL);
-        this.reservaEstatutaria = calcularSaldoFinal(ContaContabil.RESERVA_ESTATUTARIA);
-        this.ajustesValorPatrimonial = calcularSaldoFinal(ContaContabil.AJUSTES_A_VALOR_PATRIMONIAL);
-        this.previsaoDividendos = calcularSaldoFinal(ContaContabil.PREVISAO_DIVIDENDOS);
-        this.ajustesCambio = calcularSaldoFinal(ContaContabil.AJUSTES_CAMBIO);
+        this.capitalSocial = dbManager.buscarTotalDaConta(ContaContabil.CAPITAL_SOCIAL);
+        this.lucrosAcumulados = dbManager.buscarTotalDaConta(ContaContabil.LUCROS_ACUMULADOS);
+        this.reservas = dbManager.buscarTotalDaConta(ContaContabil.RESERVAS);
+        this.reservaLegal = dbManager.buscarTotalDaConta(ContaContabil.RESERVA_LEGAL);
+        this.reservaEstatutaria = dbManager.buscarTotalDaConta(ContaContabil.RESERVA_ESTATUTARIA);
+        this.ajustesValorPatrimonial = dbManager.buscarTotalDaConta(ContaContabil.AJUSTES_A_VALOR_PATRIMONIAL);
+        this.previsaoDividendos = dbManager.buscarTotalDaConta(ContaContabil.PREVISAO_DE_DIVIDENDOS);
+        this.ajustesCambio = dbManager.buscarTotalDaConta(ContaContabil.AJUSTES_DE_CAMBIO);
     }
 
-    private BigDecimal calcularSaldoFinal(ContaContabil conta) {
-        Map<String, BigDecimal> valores = dbManager.buscarTotalDaConta(conta);
-        BigDecimal credito = valores.getOrDefault("credito", BigDecimal.ZERO);
-        BigDecimal debito = valores.getOrDefault("debito", BigDecimal.ZERO);
-        return credito.subtract(debito);
-    }
 
     public BigDecimal getAtivoCirculante() {
         return caixa.add(bancos).add(contasAReceber).add(estoques).add(adiantamentos)

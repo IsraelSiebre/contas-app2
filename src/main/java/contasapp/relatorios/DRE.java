@@ -25,18 +25,26 @@ public class DRE {
     private BigDecimal despesasOperacionaisOutras;
     private BigDecimal imprevisto;
 
-
+    // Valores do ano anterior
+    private BigDecimal receitaLiquidaAnoAnterior;
+    private BigDecimal lucroLiquidoAnoAnterior;
 
     DataBaseManager dbManager = new DataBaseManager(); // Inicializa o DataBaseManager
 
+    public BigDecimal calcularReceitaOperacional(){
+        return this.receitaOperacional.add(this.receitaVendas).add(this.receitaServicos);
+    }
 
-    // Métodos para calcular totais com BigDecimal
-    public BigDecimal calcularReceitaLiquida() {
-        return this.receitaOperacional.add(this.receitaVendas).add(this.receitaServicos).add(this.receitasNaoOperacionais).add(this.receitasFinanceiras).add(this.outrasReceitas);
+    public BigDecimal calcularReceitaNaoOperacional(){
+        return this.receitasNaoOperacionais.add(this.outrasReceitas);
+    }
+
+    public BigDecimal calcularReceitaTotal() {
+        return this.calcularReceitaOperacional().add(this.calcularReceitaNaoOperacional());
     }
 
     public BigDecimal calcularLucroBruto() {
-        return calcularReceitaLiquida().subtract(this.despesasCompras);
+        return calcularReceitaTotal().subtract(this.despesasCompras);
     }
 
     public BigDecimal calcularResultadoOperacional() {
@@ -49,7 +57,7 @@ public class DRE {
     }
 
     public BigDecimal calcularResultadoAntesImpostos() {
-        return calcularResultadoOperacional().add(this.receitasFinanceiras).subtract(this.despesasFinanceiras);
+        return calcularResultadoOperacional().add(this.receitasFinanceiras).subtract(this.despesasFinanceiras).subtract(despesasNaoOperacionais);
     }
 
     public BigDecimal calcularLucroLiquido() {
@@ -58,27 +66,28 @@ public class DRE {
 
     public void buscarValoresDRE() {
         // RECEITAS
-        this.receitaOperacional= dbManager.buscarTotalDaConta(ContaContabil.RECEITAS_OPERACIONAIS).get("credito");
-        this.receitasNaoOperacionais = dbManager.buscarTotalDaConta(ContaContabil.RECEITAS_NAO_OPERACIONAIS).get("credito");
-        this.receitaVendas = dbManager.buscarTotalDaConta(ContaContabil.RECEITA_VENDA).get("credito");
-        this.receitaServicos = dbManager.buscarTotalDaConta(ContaContabil.RECEITA_SERVIÇOS).get("credito");
-        this.receitasFinanceiras = dbManager.buscarTotalDaConta(ContaContabil.RECEITAS_FINANCEIRAS).get("credito");
-        this.outrasReceitas = dbManager.buscarTotalDaConta(ContaContabil.OUTRAS_RECEITAS).get("credito");
+        this.receitaOperacional = dbManager.buscarTotalDaConta(ContaContabil.RECEITAS_OPERACIONAIS);
+        this.receitasNaoOperacionais = dbManager.buscarTotalDaConta(ContaContabil.RECEITAS_NAO_OPERACIONAIS);
+        this.receitaVendas = dbManager.buscarTotalDaConta(ContaContabil.RECEITA_DE_VENDAS);
+        this.receitaServicos = dbManager.buscarTotalDaConta(ContaContabil.RECEITA_DE_SERVICOS);
+        this.receitasFinanceiras = dbManager.buscarTotalDaConta(ContaContabil.RECEITAS_FINANCEIRAS);
+        this.outrasReceitas = dbManager.buscarTotalDaConta(ContaContabil.OUTRAS_RECEITAS);
 
         // DESPESAS
-        this.despesasOperacionais = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_OPERACIONAIS).get("debito");
-        this.despesasNaoOperacionais = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_NAO_OPERACIONAIS).get("debito");
-        this.despesasCompras = dbManager.buscarTotalDaConta(ContaContabil.DESPESA_COMPRAS).get("debito");
-        this.despesasVendas = dbManager.buscarTotalDaConta(ContaContabil.DESPESA_VENDAS).get("debito");
-        this.despesasAdministrativas = dbManager.buscarTotalDaConta(ContaContabil.DESPESA_ADMINISTRATIVA).get("debito");
-        this.despesasFinanceiras = dbManager.buscarTotalDaConta(ContaContabil.DESPESA_FINANCEIRA).get("debito");
-        this.despesasTributarias = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_TRIBUTARIAS).get("debito");
-        this.despesasOperacionaisOutras = dbManager.buscarTotalDaConta(ContaContabil.DESPESA_OPERACIONAL_OUTRAS).get("debito");
-        this.imprevisto = dbManager.buscarTotalDaConta(ContaContabil.IMPREVISTO).get("debito");
+        this.despesasOperacionais = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_OPERACIONAIS);
+        this.despesasNaoOperacionais = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_NAO_OPERACIONAIS);
+        this.despesasCompras = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_COM_COMPRAS);
+        this.despesasVendas = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_COM_VENDAS);
+        this.despesasAdministrativas = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_ADMINISTRATIVAS);
+        this.despesasFinanceiras = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_FINANCEIRAS);
+        this.despesasTributarias = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_TRIBUTARIAS);
+        this.despesasOperacionaisOutras = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_OPERACIONAIS_OUTRAS);
+        this.imprevisto = dbManager.buscarTotalDaConta(ContaContabil.IMPREVISTO);
+
 
     }
 
-
+    // Métodos para obter valores
     public BigDecimal getReceitaOperacional() {
         return receitaOperacional;
     }
@@ -101,10 +110,6 @@ public class DRE {
 
     public BigDecimal getOutrasReceitas() {
         return outrasReceitas;
-    }
-
-    public BigDecimal getDespesasOperacionais() {
-        return despesasOperacionais;
     }
 
     public BigDecimal getDespesasNaoOperacionais() {
@@ -138,4 +143,9 @@ public class DRE {
     public BigDecimal getImprevisto() {
         return imprevisto;
     }
+
+    public BigDecimal getDespesasOperacionais() {
+        return despesasOperacionais;
+    }
 }
+

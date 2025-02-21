@@ -17,15 +17,6 @@ public class Lancamento {
     private BigDecimal debito; //Entrada de valores na conta
     private BigDecimal credito; //Saída de valores da conta
 
-    public Lancamento(LocalDate data, ContaContabil conta, Tipo tipo, String descricao, BigDecimal debito, BigDecimal credito) {
-        this.id = UUID.randomUUID();
-        this.data = data;
-        this.conta = conta;
-        this.tipo = tipo;
-        this.descricao = descricao;
-        this.credito = credito;
-        this.debito = debito;
-    }
 
     public Lancamento(UUID id, LocalDate data, ContaContabil conta, Tipo tipo, String descricao, BigDecimal debito, BigDecimal credito) {
         this.id = id;

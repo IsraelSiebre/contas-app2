@@ -24,12 +24,10 @@ public class TelaDRE extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createTitledBorder("Demonstração do Resultado do Exercício (DRE)"));
         setBackground(Color.WHITE);
-
-        // Configuração de margem interna
         setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
         // Botão de exportar para PDF
-        JPanel painelTitulo = new JPanel(new FlowLayout(FlowLayout.LEFT));  // Alinhamento à esquerda
+        JPanel painelTitulo = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton exportarButton = new JButton("Exportar para PDF");
         exportarButton.addActionListener(e -> exportarParaPDF(dre));
         painelTitulo.add(exportarButton);
@@ -39,42 +37,37 @@ public class TelaDRE extends JPanel {
 
         // RECEITAS OPERACIONAIS
         adicionarSecao("1. RECEITAS");
-
         adicionarSecao("1.1 Receitas Operacionais");
         adicionarLinha("Receitas Operacionais", dre.getReceitaOperacional(), false);
         adicionarLinha("Receita de Vendas", dre.getReceitaVendas(), false);
         adicionarLinha("Receita de Serviços", dre.getReceitaServicos(), false);
+        adicionarLinha("Total Receitas Operacionais", dre.calcularReceitaOperacional(), true);
 
         adicionarEspacamento();
 
         // OUTRAS RECEITAS
         adicionarSecao("1.2 Outras Receitas");
         adicionarLinha("Receitas Não Operacionais", dre.getReceitasNaoOperacionais(), false);
-        adicionarLinha("Receitas Financeiras", dre.getReceitasFinanceiras(), false);
         adicionarLinha("Outras Receitas", dre.getOutrasReceitas(), false);
+        adicionarLinha("Total Outras Receitas", dre.calcularReceitaNaoOperacional(), true);
 
         adicionarEspacamento();
 
         // RECEITA LÍQUIDA
-        adicionarLinha("Receita Líquida", dre.calcularReceitaLiquida(), true);
+        adicionarLinha("Receita Total", dre.calcularReceitaTotal(), true);
 
         adicionarEspacamento();
 
-        // CUSTOS
-        adicionarSecao("(-) Custo das Mercadorias/Serviços");
-        adicionarLinha("Custo das Mercadorias/Serviços", dre.getDespesasCompras(), false);
-        adicionarLinha("Lucro Bruto", dre.calcularLucroBruto(), true);
-
-        adicionarEspacamento();
 
         // DESPESAS OPERACIONAIS
         adicionarSecao("2. DESPESAS");
-
         adicionarSecao("2.1 Despesas Operacionais");
+        adicionarLinha("Despesas Operacionais", dre.getDespesasOperacionais(), false);
         adicionarLinha("Despesas com Compras", dre.getDespesasCompras(), false);
         adicionarLinha("Despesas com Vendas", dre.getDespesasVendas(), false);
         adicionarLinha("Despesas Administrativas", dre.getDespesasAdministrativas(), false);
         adicionarLinha("Despesas Operacionais Outras", dre.getDespesasOperacionaisOutras(), false);
+        adicionarLinha("Imprevisto", dre.getImprevisto(), false);
         adicionarLinha("Resultado Operacional", dre.calcularResultadoOperacional(), true);
 
         adicionarEspacamento();
@@ -95,14 +88,15 @@ public class TelaDRE extends JPanel {
 
         // IMPOSTOS
         adicionarSecao("(-) Impostos sobre o Lucro");
-        adicionarLinha("Imposto de Renda e Contribuição Social", dre.getDespesasTributarias(), false);
+        adicionarLinha("Impostos", dre.getDespesasTributarias(), false);
         adicionarLinha("Lucro Líquido", dre.calcularLucroLiquido(), true);
 
         adicionarEspacamento();
+
     }
 
     private void adicionarSecao(String titulo) {
-        JPanel painelTitulo = new JPanel(new FlowLayout(FlowLayout.LEFT));  // Alinhamento à esquerda
+        JPanel painelTitulo = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel label = new JLabel(titulo);
         label.setFont(new Font("Arial", Font.BOLD, 14));
         label.setForeground(new Color(50, 50, 50));
@@ -163,23 +157,24 @@ public class TelaDRE extends JPanel {
             document.add(new Paragraph("Receitas Operacionais: R$ " + df.format(dre.getReceitaOperacional())));
             document.add(new Paragraph("Receita de Vendas: R$ " + df.format(dre.getReceitaVendas())));
             document.add(new Paragraph("Receita de Serviços: R$ " + df.format(dre.getReceitaServicos())));
-            document.add(new Paragraph("Receitas Não Operacionais: R$ " + df.format(dre.getReceitasNaoOperacionais())));
-            document.add(new Paragraph("Receitas Financeiras: R$ " + df.format(dre.getReceitasFinanceiras())));
-            document.add(new Paragraph("Outras Receitas: R$ " + df.format(dre.getOutrasReceitas())));
-            document.add(new Paragraph("Receita Líquida: R$ " + df.format(dre.calcularReceitaLiquida())));
+            document.add(new Paragraph("Total Receitas Operacionais: R$ " + df.format(dre.calcularReceitaTotal())));
 
-            // Adicionando Custo das Mercadorias/Serviços
-            document.add(new Paragraph("(-) Custo das Mercadorias/Serviços").setBold());
-            document.add(new Paragraph("Custo das Mercadorias/Serviços: R$ " + df.format(dre.getDespesasCompras())));
-            document.add(new Paragraph("Lucro Bruto: R$ " + df.format(dre.calcularLucroBruto())));
+            // Adicionando Outras Receitas
+            document.add(new Paragraph("1.2 Outras Receitas").setBold());
+            document.add(new Paragraph("Receitas Não Operacionais: R$ " + df.format(dre.getReceitasNaoOperacionais())));
+            document.add(new Paragraph("Outras Receitas: R$ " + df.format(dre.getOutrasReceitas())));
+            document.add(new Paragraph("Total Outras Receitas: R$ " + df.format(dre.calcularReceitaNaoOperacional())));
+
 
             // Adicionando Despesas
             document.add(new Paragraph("2. DESPESAS").setBold());
             document.add(new Paragraph("2.1 Despesas Operacionais").setBold());
+            document.add(new Paragraph("Despesas Operacionais: R$ " + df.format(dre.getDespesasOperacionais())));
             document.add(new Paragraph("Despesas com Compras: R$ " + df.format(dre.getDespesasCompras())));
             document.add(new Paragraph("Despesas com Vendas: R$ " + df.format(dre.getDespesasVendas())));
             document.add(new Paragraph("Despesas Administrativas: R$ " + df.format(dre.getDespesasAdministrativas())));
             document.add(new Paragraph("Despesas Operacionais Outras: R$ " + df.format(dre.getDespesasOperacionaisOutras())));
+            document.add(new Paragraph("Imprevisto: R$ " + df.format(dre.getImprevisto())));
             document.add(new Paragraph("Resultado Operacional: R$ " + df.format(dre.calcularResultadoOperacional())));
 
             document.add(new Paragraph("2.2 Despesas Não Operacionais").setBold());
@@ -193,7 +188,7 @@ public class TelaDRE extends JPanel {
 
             // Adicionando Impostos
             document.add(new Paragraph("(-) Impostos sobre o Lucro").setBold());
-            document.add(new Paragraph("Imposto de Renda e Contribuição Social: R$ " + df.format(dre.getDespesasTributarias())));
+            document.add(new Paragraph("Impostos: R$ " + df.format(dre.getDespesasTributarias())));
             document.add(new Paragraph("Lucro Líquido: R$ " + df.format(dre.calcularLucroLiquido())));
 
             document.close();
@@ -202,5 +197,4 @@ public class TelaDRE extends JPanel {
             JOptionPane.showMessageDialog(this, "Erro ao criar o arquivo PDF: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 }

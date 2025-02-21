@@ -16,7 +16,7 @@ public enum ContaContabil {
     // ATIVO - NÃO CIRCULANTE
     IMOBILIZADO("Imobilizado", "1.2.1", "Ativo", "Não Circulante"),
     INTANGIVEL("Intangível", "1.2.2", "Ativo", "Não Circulante"),
-    APLICACOES_LONGO_PRAZO("Aplicações a Longo Prazo", "1.2.3", "Ativo", "Não Circulante"),
+    APLICACOES_A_LONGO_PRAZO("Aplicações a Longo Prazo", "1.2.3", "Ativo", "Não Circulante"),
     INVESTIMENTOS("Investimentos", "1.2.4", "Ativo", "Não Circulante"),
     PROPRIEDADES_INVESTIDAS("Propriedades Investidas", "1.2.5", "Ativo", "Não Circulante"),
     ATIVO_DIFERIDO("Ativo Diferido", "1.2.6", "Ativo", "Não Circulante"),
@@ -33,9 +33,9 @@ public enum ContaContabil {
     OUTRAS_OBRIGACOES("Outras Obrigações", "2.9.1", "Passivo", "Circulante"),
 
     // PASSIVO - NÃO CIRCULANTE
-    OBRIGACAO_LONGO_PRAZO("Obrigação de Longo Prazo", "2.2.2", "Passivo", "Não Circulante"),
-    FINANCIAMENTO("Financiamento de Longo Prazo", "2.2.3", "Passivo", "Não Circulante"),
-    EMPRESTIMOS_LONGO_PRAZO("Empréstimos de Longo Prazo", "2.2.4", "Passivo", "Não Circulante"),
+    OBRIGACAO_DE_LONGO_PRAZO("Obrigação de Longo Prazo", "2.2.2", "Passivo", "Não Circulante"),
+    FINANCIAMENTO_DE_LONGO_PRAZO("Financiamento de Longo Prazo", "2.2.3", "Passivo", "Não Circulante"),
+    EMPRESTIMOS_DE_LONGO_PRAZO("Empréstimos de Longo Prazo", "2.2.4", "Passivo", "Não Circulante"),
 
     // PATRIMÔNIO LÍQUIDO
     CAPITAL_SOCIAL("Capital Social", "3.1.1", "PL", null),
@@ -44,26 +44,26 @@ public enum ContaContabil {
     RESERVA_LEGAL("Reserva Legal", "3.3.2", "PL", null),
     RESERVA_ESTATUTARIA("Reserva Estatutária", "3.3.3", "PL", null),
     AJUSTES_A_VALOR_PATRIMONIAL("Ajustes a Valor Patrimonial", "3.4.1", "PL", null),
-    PREVISAO_DIVIDENDOS("Previsão de Dividendos", "3.5.1", "PL", null),
-    AJUSTES_CAMBIO("Ajustes de Câmbio", "3.6.1", "PL", null),
+    PREVISAO_DE_DIVIDENDOS("Previsão de Dividendos", "3.5.1", "PL", null),
+    AJUSTES_DE_CAMBIO("Ajustes de Câmbio", "3.6.1", "PL", null),
 
     // RECEITAS
     RECEITAS_OPERACIONAIS("Receitas Operacionais", "4.1.1", "Resultado", "Receita"),
     RECEITAS_NAO_OPERACIONAIS("Receitas Não Operacionais", "4.2.1", "Resultado", "Receita"),
-    RECEITA_VENDA("Receita de Vendas", "4.1.2", "Resultado", "Receita"),
-    RECEITA_SERVIÇOS("Receita de Serviços", "4.1.3", "Resultado", "Receita"),
+    RECEITA_DE_VENDAS("Receita de Vendas", "4.1.2", "Resultado", "Receita"),
+    RECEITA_DE_SERVICOS("Receita de Serviços", "4.1.3", "Resultado", "Receita"),
     RECEITAS_FINANCEIRAS("Receitas Financeiras", "4.3.1", "Resultado", "Receita"),
     OUTRAS_RECEITAS("Outras Receitas", "4.4.1", "Resultado", "Receita"),
 
     // DESPESAS
     DESPESAS_OPERACIONAIS("Despesas Operacionais", "5.1.1", "Resultado", "Despesa"),
     DESPESAS_NAO_OPERACIONAIS("Despesas Não Operacionais", "5.2.1", "Resultado", "Despesa"),
-    DESPESA_COMPRAS("Despesas com Compras", "5.1.2", "Resultado", "Despesa"),
-    DESPESA_VENDAS("Despesas com Vendas", "5.1.3", "Resultado", "Despesa"),
-    DESPESA_ADMINISTRATIVA("Despesas Administrativas", "5.1.4", "Resultado", "Despesa"),
-    DESPESA_FINANCEIRA("Despesas Financeiras", "5.2.2", "Resultado", "Despesa"),
+    DESPESAS_COM_COMPRAS("Despesas com Compras", "5.1.2", "Resultado", "Despesa"),
+    DESPESAS_COM_VENDAS("Despesas com Vendas", "5.1.3", "Resultado", "Despesa"),
+    DESPESAS_ADMINISTRATIVAS("Despesas Administrativas", "5.1.4", "Resultado", "Despesa"),
+    DESPESAS_FINANCEIRAS("Despesas Financeiras", "5.2.2", "Resultado", "Despesa"),
     DESPESAS_TRIBUTARIAS("Despesas Tributárias", "5.2.3", "Resultado", "Despesa"),
-    DESPESA_OPERACIONAL_OUTRAS("Despesas Operacionais Outras", "5.2.4", "Resultado", "Despesa"),
+    DESPESAS_OPERACIONAIS_OUTRAS("Despesas Operacionais Outras", "5.2.4", "Resultado", "Despesa"),
     IMPREVISTO("Imprevisto", "5.2.5", "Resultado", "Despesa");
 
 

@@ -209,9 +209,10 @@ public class DataBaseManager {
 
     // Metodo para atualizar os totais na tabela "totais"
     public void atualizarTotais(Lancamento lancamento, String acao) {
-        String conta = lancamento.getConta().getCodigo().toString() + " - " + lancamento.getConta().getNome().toString();
-        BigDecimal debito = lancamento.getDebito();
-        BigDecimal credito = lancamento.getCredito();
+        String conta = lancamento.getConta().getCodigo() + " - " + lancamento.getConta().getNome();
+        String tipoDaConta = lancamento.getConta().getTipo() + " - " + lancamento.getConta().getSubgrupo();
+        BigDecimal debitoLancamento = lancamento.getDebito();
+        BigDecimal creditoLancamento = lancamento.getCredito();
 
         // Verificar se já existe um total para a conta
         String selectSQL = "SELECT * FROM totais WHERE conta = ?";
@@ -223,50 +224,55 @@ public class DataBaseManager {
 
             if (resultSet.next()) {
                 // Se existe, atualizar os totais de débito e crédito
-                BigDecimal totalDebitoAtual = resultSet.getBigDecimal("debito");
-                BigDecimal totalCreditoAtual = resultSet.getBigDecimal("credito");
+                BigDecimal totalAtual = resultSet.getBigDecimal("total");
 
                 if (acao.equals("adicionar")) {
 
                     // Atualiza o total de débito, se houver débito no lançamento
-                    if (debito.compareTo(BigDecimal.ZERO) > 0) {
-                        totalDebitoAtual = totalDebitoAtual.add(debito);
+                    if (debitoLancamento.compareTo(BigDecimal.ZERO) > 0) {
+                        if (tipoDaConta.contains("Ativo") || tipoDaConta.contains("Despesa")) {
+                            totalAtual = totalAtual.add(debitoLancamento);
+                        } else {
+                            totalAtual = totalAtual.subtract(debitoLancamento);
+                        }
                     }
 
                     // Atualiza o total de crédito, se houver crédito no lançamento
-                    if (credito.compareTo(BigDecimal.ZERO) > 0) {
-                        totalCreditoAtual = totalCreditoAtual.add(credito);
+                    if (creditoLancamento.compareTo(BigDecimal.ZERO) > 0) {
+                        if (tipoDaConta.contains("Passivo") || tipoDaConta.contains("Receita") || tipoDaConta.contains("PL")) {
+                            totalAtual = totalAtual.add(creditoLancamento);
+                        } else {
+                            totalAtual = totalAtual.subtract(creditoLancamento);
+                        }
                     }
 
                 } else {
 
                     // Atualiza o total de débito, se houver débito no lançamento
-                    if (debito.compareTo(BigDecimal.ZERO) > 0) {
-                        totalDebitoAtual = totalDebitoAtual.subtract(debito);
+                    if (debitoLancamento.compareTo(BigDecimal.ZERO) > 0) {
+                        if (tipoDaConta.contains("Ativo") || tipoDaConta.contains("Despesa")) {
+                            totalAtual = totalAtual.subtract(debitoLancamento);
+                        } else {
+                            totalAtual = totalAtual.add(debitoLancamento);
+                        }
                     }
 
                     // Atualiza o total de crédito, se houver crédito no lançamento
-                    if (credito.compareTo(BigDecimal.ZERO) > 0) {
-                        totalCreditoAtual = totalCreditoAtual.subtract(credito);
+                    if (creditoLancamento.compareTo(BigDecimal.ZERO) > 0) {
+                        if (tipoDaConta.contains("Passivo") || tipoDaConta.contains("Receita") || tipoDaConta.contains("PL")) {
+                            totalAtual = totalAtual.subtract(creditoLancamento);
+                        } else {
+                            totalAtual = totalAtual.add(creditoLancamento);
+                        }
                     }
                 }
 
-
-                String updateSQL = "UPDATE totais SET debito = ?, credito = ? WHERE conta = ?";
+                // Atualiza o total no banco de dados
+                String updateSQL = "UPDATE totais SET total = ? WHERE conta = ?";
                 try (PreparedStatement updateStatement = connection.prepareStatement(updateSQL)) {
-                    updateStatement.setBigDecimal(1, totalDebitoAtual);
-                    updateStatement.setBigDecimal(2, totalCreditoAtual);
-                    updateStatement.setString(3, conta);
+                    updateStatement.setBigDecimal(1, totalAtual);
+                    updateStatement.setString(2, conta);
                     updateStatement.executeUpdate();
-                }
-            } else {
-                // Se não existe, inserir um novo total para a conta
-                String insertSQL = "INSERT INTO totais (conta, debito, credito) VALUES (?, ?, ?)";
-                try (PreparedStatement insertStatement = connection.prepareStatement(insertSQL)) {
-                    insertStatement.setString(1, conta);
-                    insertStatement.setBigDecimal(2, debito);
-                    insertStatement.setBigDecimal(3, credito);
-                    insertStatement.executeUpdate();
                 }
             }
         } catch (SQLException e) {
@@ -274,28 +280,23 @@ public class DataBaseManager {
         }
     }
 
-    public Map<String, BigDecimal> buscarTotalDaConta(ContaContabil conta) {
-        String selectSQL = "SELECT * FROM totais WHERE conta = ?";
 
-        // Mapa para armazenar os totais
-        Map<String, BigDecimal> totais = new HashMap<>();
+
+
+
+    public BigDecimal buscarTotalDaConta(ContaContabil conta) {
+        String selectSQL = "SELECT * FROM totais WHERE conta = ?";
 
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:contasapp.db");
              PreparedStatement statement = connection.prepareStatement(selectSQL)) {
 
-            String contaComCodigo = conta.getCodigo().toString() + " - " + conta.getNome().toString();
+            String contaComCodigo = conta.getCodigo() + " - " + conta.getNome();
             statement.setString(1, contaComCodigo);
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                BigDecimal debito = resultSet.getBigDecimal("debito");
-                BigDecimal credito = resultSet.getBigDecimal("credito");
+                return resultSet.getBigDecimal("total");
 
-                // Adicionando os valores ao HashMap
-                totais.put("debito", debito);
-                totais.put("credito", credito);
-
-                return totais;
             }
 
         } catch (SQLException e) {
