@@ -1,57 +1,80 @@
-package contasapp.relatorios;
+package contasapp.model.relatorios;
 
 import contasapp.database.DataBaseManager;
 import contasapp.model.lancamento.ContaContabil;
+
 import java.math.BigDecimal;
-import java.util.Map;
 
-public class BalancoPatrimonial {
-    private BigDecimal caixa;
-    private BigDecimal bancos;
-    private BigDecimal contasAReceber;
-    private BigDecimal estoques;
-    private BigDecimal adiantamentos;
-    private BigDecimal aplicacoesFinanceiras;
-    private BigDecimal impostosARecuperar;
-    private BigDecimal despesasPrevistas;
+public class Relatorio {
 
-    private BigDecimal imobilizado;
-    private BigDecimal intangivel;
-    private BigDecimal aplicacoesLongoPrazo;
-    private BigDecimal investimentos;
-    private BigDecimal propriedadesInvestidas;
-    private BigDecimal ativoDiferido;
+    // ATIVO - CIRCULANTE
+    protected BigDecimal caixa;
+    protected BigDecimal bancos;
+    protected BigDecimal contasAReceber;
+    protected BigDecimal estoques;
+    protected BigDecimal adiantamentos;
+    protected BigDecimal aplicacoesFinanceiras;
+    protected BigDecimal impostosARecuperar;
+    protected BigDecimal despesasPrevistas;
 
-    private BigDecimal fornecedores;
-    private BigDecimal emprestimosBancarios;
-    private BigDecimal obrigacoesFiscais;
-    private BigDecimal provisoes;
-    private BigDecimal dividendosAPagar;
-    private BigDecimal obrigacaoTributaria;
-    private BigDecimal salariosAPagar;
-    private BigDecimal despesasAPagar;
-    private BigDecimal outrasObrigacoes;
+    // ATIVO - NÃO CIRCULANTE
+    protected BigDecimal imobilizado;
+    protected BigDecimal intangivel;
+    protected BigDecimal aplicacoesLongoPrazo;
+    protected BigDecimal investimentos;
+    protected BigDecimal propriedadesInvestidas;
+    protected BigDecimal ativoDiferido;
 
-    private BigDecimal obrigacaoLongoPrazo;
-    private BigDecimal financiamento;
-    private BigDecimal emprestimosLongoPrazo;
+    // PASSIVO - CIRCULANTE
+    protected BigDecimal fornecedores;
+    protected BigDecimal emprestimosBancarios;
+    protected BigDecimal obrigacoesFiscais;
+    protected BigDecimal provisoes;
+    protected BigDecimal dividendosAPagar;
+    protected BigDecimal obrigacaoTributaria;
+    protected BigDecimal salariosAPagar;
+    protected BigDecimal despesasAPagar;
+    protected BigDecimal outrasObrigacoes;
 
-    private BigDecimal capitalSocial;
-    private BigDecimal lucrosAcumulados;
-    private BigDecimal reservas;
-    private BigDecimal reservaLegal;
-    private BigDecimal reservaEstatutaria;
-    private BigDecimal ajustesValorPatrimonial;
-    private BigDecimal previsaoDividendos;
-    private BigDecimal ajustesCambio;
+    // PASSIVO - NÃO CIRCULANTE
+    protected BigDecimal obrigacaoLongoPrazo;
+    protected BigDecimal financiamento;
+    protected BigDecimal emprestimosLongoPrazo;
 
-    private final DataBaseManager dbManager = new DataBaseManager();
+    // PATRIMÔNIO LÍQUIDO
+    protected BigDecimal capitalSocial;
+    protected BigDecimal lucrosAcumulados;
+    protected BigDecimal reservas;
+    protected BigDecimal reservaLegal;
+    protected BigDecimal reservaEstatutaria;
+    protected BigDecimal ajustesValorPatrimonial;
+    protected BigDecimal previsaoDividendos;
+    protected BigDecimal ajustesCambio;
 
-    public BalancoPatrimonial() {
-        calcularSaldos();
-    }
+    // RECEITAS
+    protected BigDecimal receitaOperacional;
+    protected BigDecimal receitasNaoOperacionais;
+    protected BigDecimal receitaVendas;
+    protected BigDecimal receitaServicos;
+    protected BigDecimal receitasFinanceiras;
+    protected BigDecimal outrasReceitas;
 
-    public void calcularSaldos() {
+    // DESPESAS OPERACIONAIS
+    protected BigDecimal despesasOperacionais;
+    protected BigDecimal despesasNaoOperacionais;
+    protected BigDecimal despesasCompras;
+    protected BigDecimal despesasVendas;
+    protected BigDecimal despesasAdministrativas;
+    protected BigDecimal despesasFinanceiras;
+    protected BigDecimal despesasTributarias;
+    protected BigDecimal despesasOperacionaisOutras;
+    protected BigDecimal imprevisto;
+
+
+    protected void buscarSaldos(){
+        DataBaseManager dbManager = new DataBaseManager();
+
+        // ATIVO - CIRCULANTE
         this.caixa = dbManager.buscarTotalDaConta(ContaContabil.CAIXA);
         this.bancos = dbManager.buscarTotalDaConta(ContaContabil.BANCOS);
         this.contasAReceber = dbManager.buscarTotalDaConta(ContaContabil.CONTAS_A_RECEBER);
@@ -61,6 +84,7 @@ public class BalancoPatrimonial {
         this.impostosARecuperar = dbManager.buscarTotalDaConta(ContaContabil.IMPOSTOS_A_RECUPERAR);
         this.despesasPrevistas = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_PREVISTAS);
 
+        // ATIVO - NÃO CIRCULANTE
         this.imobilizado = dbManager.buscarTotalDaConta(ContaContabil.IMOBILIZADO);
         this.intangivel = dbManager.buscarTotalDaConta(ContaContabil.INTANGIVEL);
         this.aplicacoesLongoPrazo = dbManager.buscarTotalDaConta(ContaContabil.APLICACOES_A_LONGO_PRAZO);
@@ -68,6 +92,7 @@ public class BalancoPatrimonial {
         this.propriedadesInvestidas = dbManager.buscarTotalDaConta(ContaContabil.PROPRIEDADES_INVESTIDAS);
         this.ativoDiferido = dbManager.buscarTotalDaConta(ContaContabil.ATIVO_DIFERIDO);
 
+        // PASSIVO - CIRCULANTE
         this.fornecedores = dbManager.buscarTotalDaConta(ContaContabil.FORNECEDORES);
         this.emprestimosBancarios = dbManager.buscarTotalDaConta(ContaContabil.EMPRESTIMOS_BANCARIOS);
         this.obrigacoesFiscais = dbManager.buscarTotalDaConta(ContaContabil.OBRIGACOES_FISCAIS);
@@ -78,10 +103,12 @@ public class BalancoPatrimonial {
         this.despesasAPagar = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_A_PAGAR);
         this.outrasObrigacoes = dbManager.buscarTotalDaConta(ContaContabil.OUTRAS_OBRIGACOES);
 
+        // PASSIVO - NÃO CIRCULANTE
         this.obrigacaoLongoPrazo = dbManager.buscarTotalDaConta(ContaContabil.OBRIGACAO_DE_LONGO_PRAZO);
         this.financiamento = dbManager.buscarTotalDaConta(ContaContabil.FINANCIAMENTO_DE_LONGO_PRAZO);
         this.emprestimosLongoPrazo = dbManager.buscarTotalDaConta(ContaContabil.EMPRESTIMOS_DE_LONGO_PRAZO);
 
+        // PATRIMÔNIO LÍQUIDO
         this.capitalSocial = dbManager.buscarTotalDaConta(ContaContabil.CAPITAL_SOCIAL);
         this.lucrosAcumulados = dbManager.buscarTotalDaConta(ContaContabil.LUCROS_ACUMULADOS);
         this.reservas = dbManager.buscarTotalDaConta(ContaContabil.RESERVAS);
@@ -90,44 +117,26 @@ public class BalancoPatrimonial {
         this.ajustesValorPatrimonial = dbManager.buscarTotalDaConta(ContaContabil.AJUSTES_A_VALOR_PATRIMONIAL);
         this.previsaoDividendos = dbManager.buscarTotalDaConta(ContaContabil.PREVISAO_DE_DIVIDENDOS);
         this.ajustesCambio = dbManager.buscarTotalDaConta(ContaContabil.AJUSTES_DE_CAMBIO);
-    }
 
+        // RECEITAS
+        this.receitaOperacional = dbManager.buscarTotalDaConta(ContaContabil.RECEITAS_OPERACIONAIS);
+        this.receitasNaoOperacionais = dbManager.buscarTotalDaConta(ContaContabil.RECEITAS_NAO_OPERACIONAIS);
+        this.receitaVendas = dbManager.buscarTotalDaConta(ContaContabil.RECEITA_DE_VENDAS);
+        this.receitaServicos = dbManager.buscarTotalDaConta(ContaContabil.RECEITA_DE_SERVICOS);
+        this.receitasFinanceiras = dbManager.buscarTotalDaConta(ContaContabil.RECEITAS_FINANCEIRAS);
+        this.outrasReceitas = dbManager.buscarTotalDaConta(ContaContabil.OUTRAS_RECEITAS);
 
-    public BigDecimal getAtivoCirculante() {
-        return caixa.add(bancos).add(contasAReceber).add(estoques).add(adiantamentos)
-                .add(aplicacoesFinanceiras).add(impostosARecuperar).add(despesasPrevistas);
-    }
+        // DESPESAS
+        this.despesasOperacionais = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_OPERACIONAIS);
+        this.despesasNaoOperacionais = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_NAO_OPERACIONAIS);
+        this.despesasCompras = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_COM_COMPRAS);
+        this.despesasVendas = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_COM_VENDAS);
+        this.despesasAdministrativas = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_ADMINISTRATIVAS);
+        this.despesasFinanceiras = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_FINANCEIRAS);
+        this.despesasTributarias = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_TRIBUTARIAS);
+        this.despesasOperacionaisOutras = dbManager.buscarTotalDaConta(ContaContabil.DESPESAS_OPERACIONAIS_OUTRAS);
+        this.imprevisto = dbManager.buscarTotalDaConta(ContaContabil.IMPREVISTO);
 
-    public BigDecimal getAtivoNaoCirculante() {
-        return imobilizado.add(intangivel).add(aplicacoesLongoPrazo).add(investimentos)
-                .add(propriedadesInvestidas).add(ativoDiferido);
-    }
-
-    public BigDecimal getAtivoTotal() {
-        return getAtivoCirculante().add(getAtivoNaoCirculante());
-    }
-
-    public BigDecimal getPassivoCirculante() {
-        return fornecedores.add(emprestimosBancarios).add(obrigacoesFiscais).add(provisoes)
-                .add(dividendosAPagar).add(obrigacaoTributaria).add(salariosAPagar).add(despesasAPagar)
-                .add(outrasObrigacoes);
-    }
-
-    public BigDecimal getPassivoNaoCirculante() {
-        return obrigacaoLongoPrazo.add(financiamento).add(emprestimosLongoPrazo);
-    }
-
-    public BigDecimal getPassivoTotal() {
-        return getPassivoCirculante().add(getPassivoNaoCirculante());
-    }
-
-    public BigDecimal getPatrimonioLiquido() {
-        return capitalSocial.add(lucrosAcumulados).add(reservas).add(reservaLegal)
-                .add(reservaEstatutaria).add(ajustesValorPatrimonial).add(previsaoDividendos).add(ajustesCambio);
-    }
-
-    public BigDecimal getPassivoEPatrimonioLiquido() {
-        return this.getPatrimonioLiquido().add(this.getPassivoTotal());
     }
 
     public BigDecimal getCaixa() {
@@ -264,5 +273,65 @@ public class BalancoPatrimonial {
 
     public BigDecimal getAjustesCambio() {
         return ajustesCambio;
+    }
+
+    public BigDecimal getReceitaOperacional() {
+        return receitaOperacional;
+    }
+
+    public BigDecimal getReceitasNaoOperacionais() {
+        return receitasNaoOperacionais;
+    }
+
+    public BigDecimal getReceitaVendas() {
+        return receitaVendas;
+    }
+
+    public BigDecimal getReceitaServicos() {
+        return receitaServicos;
+    }
+
+    public BigDecimal getReceitasFinanceiras() {
+        return receitasFinanceiras;
+    }
+
+    public BigDecimal getOutrasReceitas() {
+        return outrasReceitas;
+    }
+
+    public BigDecimal getDespesasOperacionais() {
+        return despesasOperacionais;
+    }
+
+    public BigDecimal getDespesasNaoOperacionais() {
+        return despesasNaoOperacionais;
+    }
+
+    public BigDecimal getDespesasCompras() {
+        return despesasCompras;
+    }
+
+    public BigDecimal getDespesasVendas() {
+        return despesasVendas;
+    }
+
+    public BigDecimal getDespesasAdministrativas() {
+        return despesasAdministrativas;
+    }
+
+    public BigDecimal getDespesasFinanceiras() {
+        return despesasFinanceiras;
+    }
+
+    public BigDecimal getDespesasTributarias() {
+        return despesasTributarias;
+    }
+
+    public BigDecimal getDespesasOperacionaisOutras() {
+        return despesasOperacionaisOutras;
+    }
+
+    public BigDecimal getImprevisto() {
+        return imprevisto;
     }
 }

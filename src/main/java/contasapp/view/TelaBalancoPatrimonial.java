@@ -5,7 +5,7 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
-import contasapp.relatorios.BalancoPatrimonial;
+import contasapp.model.relatorios.BalancoPatrimonial;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -20,7 +20,6 @@ public class TelaBalancoPatrimonial extends JPanel {
 
     public TelaBalancoPatrimonial() {
         BalancoPatrimonial balancoPatrimonial = new BalancoPatrimonial();
-        balancoPatrimonial.calcularSaldos();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createTitledBorder("Balanço Patrimonial"));
         setBackground(Color.WHITE);

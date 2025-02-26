@@ -5,7 +5,7 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
-import contasapp.relatorios.DRE;
+import contasapp.model.relatorios.DRE;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -20,7 +20,6 @@ public class TelaDRE extends JPanel {
 
     public TelaDRE() {
         DRE dre = new DRE();
-        dre.buscarValoresDRE();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createTitledBorder("Demonstração do Resultado do Exercício (DRE)"));
         setBackground(Color.WHITE);
