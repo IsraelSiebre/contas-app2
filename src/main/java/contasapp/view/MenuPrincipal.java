@@ -55,7 +55,7 @@ public class MenuPrincipal extends JFrame {
         JMenuBar menuBar = new JMenuBar();
 
         // Criar menus principais
-        JMenu menuArquivo = new JMenu("Arquivo");
+        JMenu menuArquivo = new JMenu("Opções");
         JMenu menuMovimentacoes = new JMenu("Lançamentos");
         JMenu menuRelatorios = new JMenu("Relatórios");
 
@@ -77,7 +77,6 @@ public class MenuPrincipal extends JFrame {
     }
 
     private void adicionarItensMenuArquivo(JMenu menu) {
-        JMenuItem itemInfo = new JMenuItem("Sobre");
         JMenuItem itemFazerBackup = new JMenuItem("Fazer Backup");
         JMenuItem itemCarregarBackup = new JMenuItem("Carregar Backup");
         JMenuItem itemSair = new JMenuItem("Sair");
@@ -86,7 +85,6 @@ public class MenuPrincipal extends JFrame {
         itemCarregarBackup.addActionListener(_ -> new DataBaseManager().carregarBackup());
         itemSair.addActionListener(_ -> System.exit(0));
 
-        menu.add(itemInfo);
         menu.add(itemFazerBackup);
         menu.add(itemCarregarBackup);
         menu.add(itemSair);
