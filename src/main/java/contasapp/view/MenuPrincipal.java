@@ -111,6 +111,7 @@ public class MenuPrincipal extends JFrame {
 
         itemRelatorioDRE.addActionListener(_ -> abrirTela(new TelaDRE()));
         itemRelatorioBalancoPatrimonial.addActionListener(_ -> abrirTela(new TelaBalancoPatrimonial()));
+        itemRelatorioBalancete.addActionListener(_ -> abrirTela(new TelaBalancete()));
 
         menu.add(itemRelatorioDRE);
         menu.add(itemRelatorioBalancoPatrimonial);

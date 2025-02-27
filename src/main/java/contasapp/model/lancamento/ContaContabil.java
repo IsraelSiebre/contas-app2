@@ -96,7 +96,6 @@ public enum ContaContabil {
     }
 
     public static String[] getContas() {
-        // Mapeia os valores do enum para o nome e código das contas concatenados
         return Arrays.stream(ContaContabil.values())
                 .map(conta -> conta.getCodigo() + " - " + conta.getNome())  // Concatena o nome e o código da conta
                 .toArray(String[]::new);      // Converte para array
