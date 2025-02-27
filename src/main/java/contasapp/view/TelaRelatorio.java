@@ -1,5 +1,6 @@
 package contasapp.view;
 
+import contasapp.database.DataBaseManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,6 +8,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 public abstract class TelaRelatorio extends JPanel{
+
 
     protected final DecimalFormat df = new DecimalFormat("#,##0.00");
 

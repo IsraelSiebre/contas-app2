@@ -95,7 +95,11 @@ public class MenuPrincipal extends JFrame {
         JMenuItem itemEditarLancamento = new JMenuItem("Editar Lançamento");
 
         itemCadastrarLancamento.addActionListener(_ -> abrirTela(new TelaRegistrarLancamento()));
-        itemEditarLancamento.addActionListener(_ -> abrirTela(new TelaEditarLancamento()));
+        itemEditarLancamento.addActionListener(_ -> {
+            if (new DataBaseManager().verificaSeTemDB("contasapp.db", "Não há lançamentos!")) {
+                abrirTela(new TelaEditarLancamento());
+            }
+        });
 
         menu.add(itemCadastrarLancamento);
         menu.add(itemEditarLancamento);
@@ -107,10 +111,29 @@ public class MenuPrincipal extends JFrame {
         JMenuItem itemRelatorioBalancete = new JMenuItem("Balancete");
         JMenuItem itemRelatorioIndices = new JMenuItem("Índices");
 
-        itemRelatorioDRE.addActionListener(_ -> abrirTela(new TelaDRE()));
-        itemRelatorioBalancoPatrimonial.addActionListener(_ -> abrirTela(new TelaBalancoPatrimonial()));
-        itemRelatorioBalancete.addActionListener(_ -> abrirTela(new TelaBalancete()));
-        itemRelatorioIndices.addActionListener(_ -> abrirTela(new TelaIndices()));
+        itemRelatorioDRE.addActionListener(_ -> {
+            if (new DataBaseManager().verificaSeTemDB("contasapp.db", "Não há dados para gerar DRE!")) {
+                abrirTela(new TelaDRE());
+            }
+        });
+
+        itemRelatorioBalancoPatrimonial.addActionListener(_ -> {
+            if (new DataBaseManager().verificaSeTemDB("contasapp.db", "Não há dados para gerar Balanço Patrimonial!")) {
+                abrirTela(new TelaBalancoPatrimonial());
+            }
+        });
+
+        itemRelatorioBalancete.addActionListener(_ -> {
+            if (new DataBaseManager().verificaSeTemDB("contasapp.db", "Não há dados para gerar Balancete!")) {
+                abrirTela(new TelaBalancete());
+            }
+        });
+
+        itemRelatorioIndices.addActionListener(_ -> {
+            if (new DataBaseManager().verificaSeTemDB("contasapp.db", "Não há dados para gerar Indices!")) {
+                abrirTela(new TelaIndices());
+            }
+        });
 
         menu.add(itemRelatorioDRE);
         menu.add(itemRelatorioBalancoPatrimonial);
@@ -149,6 +172,7 @@ public class MenuPrincipal extends JFrame {
         painelPrincipal.revalidate();
         painelPrincipal.repaint();
     }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(MenuPrincipal::new);

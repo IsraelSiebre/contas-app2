@@ -16,23 +16,106 @@ public class DataBaseManager {
 
     // Método para adicionar um lançamento no banco de dados
     public void adicionarLancamento(Lancamento lancamento) {
-        String insertSQL = "INSERT INTO lancamentos (id, data, debito, credito, tipo, descricao, conta) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String insertSQL = "INSERT INTO lancamentos (id, data, conta, tipo, descricao, debito, credito) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:contasapp.db");
-             PreparedStatement statement = connection.prepareStatement(insertSQL)) {
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:contasapp.db")) {
 
-            // Gerando um UUID único para o lançamento
-            statement.setString(1, lancamento.getId().toString());
-            statement.setString(2, lancamento.getData().toString());
-            statement.setBigDecimal(3, lancamento.getDebito());
-            statement.setBigDecimal(4, lancamento.getCredito());
-            statement.setString(5, lancamento.getTipo().toString()); // Tipo de movimentação
-            statement.setString(6, lancamento.getDescricao());
-            statement.setString(7, lancamento.getConta().getCodigo().toString() + " - " + lancamento.getConta().getNome().toString()); // Conta contábil
+            // Cria as tabelas se não existirem
+            try (Statement createStatement = connection.createStatement()) {
+                // Tabela lancamentos
+                String createLancamentosTable = "CREATE TABLE IF NOT EXISTS lancamentos ("
+                        + "id TEXT NOT NULL,"
+                        + "data TEXT NOT NULL,"
+                        + "conta TEXT NOT NULL,"
+                        + "tipo TEXT NOT NULL,"
+                        + "descricao TEXT NOT NULL,"
+                        + "debito DECIMAL(15, 2) NOT NULL,"
+                        + "credito DECIMAL(15, 2) NOT NULL)";
+                createStatement.execute(createLancamentosTable);
 
-            // Executa a inserção no banco de dados
-            statement.executeUpdate();
-            System.out.println("Lançamento adicionado com sucesso!");
+                // Tabela totais
+                String createTotaisTable = "CREATE TABLE IF NOT EXISTS totais ("
+                        + "conta VARCHAR(255),"
+                        + "total DECIMAL(15, 2))";
+                createStatement.execute(createTotaisTable);
+            }
+
+            // Insere dados iniciais na tabela totais se estiver vazia
+            try (Statement checkStatement = connection.createStatement()) {
+                ResultSet rs = checkStatement.executeQuery("SELECT COUNT(*) AS count FROM totais");
+                if (rs.next() && rs.getInt("count") == 0) {
+                    String insertTotaisSQL = "INSERT INTO totais (conta, total) VALUES "
+                            + "('1.1.1 - Caixa', 0.00),"
+                            + "('1.1.2 - Bancos', 0.00),"
+                            + "('1.1.3 - Contas a Receber', 0.00),"
+                            + "('1.1.4 - Estoques', 0.00),"
+                            + "('1.1.5 - Adiantamentos', 0.00),"
+                            + "('1.1.6 - Aplicações Financeiras', 0.00),"
+                            + "('1.1.7 - Impostos a Recuperar', 0.00),"
+                            + "('1.1.8 - Despesas Previstas', 0.00),"
+                            + "('1.2.1 - Imobilizado', 0.00),"
+                            + "('1.2.2 - Intangível', 0.00),"
+                            + "('1.2.3 - Aplicações a Longo Prazo', 0.00),"
+                            + "('1.2.4 - Investimentos', 0.00),"
+                            + "('1.2.5 - Propriedades Investidas', 0.00),"
+                            + "('1.2.6 - Ativo Diferido', 0.00),"
+                            + "('2.1.1 - Fornecedores', 0.00),"
+                            + "('2.2.1 - Empréstimos Bancários', 0.00),"
+                            + "('2.3.1 - Obrigações Fiscais', 0.00),"
+                            + "('2.4.1 - Provisões', 0.00),"
+                            + "('2.5.1 - Dividendos a Pagar', 0.00),"
+                            + "('2.6.1 - Obrigação Tributária', 0.00),"
+                            + "('2.7.1 - Salários a Pagar', 0.00),"
+                            + "('2.8.1 - Despesas a Pagar', 0.00),"
+                            + "('2.9.1 - Outras Obrigações', 0.00),"
+                            + "('2.2.2 - Obrigação de Longo Prazo', 0.00),"
+                            + "('2.2.3 - Financiamento de Longo Prazo', 0.00),"
+                            + "('2.2.4 - Empréstimos de Longo Prazo', 0.00),"
+                            + "('3.1.1 - Capital Social', 0.00),"
+                            + "('3.2.1 - Lucros Acumulados', 0.00),"
+                            + "('3.3.1 - Reservas', 0.00),"
+                            + "('3.3.2 - Reserva Legal', 0.00),"
+                            + "('3.3.3 - Reserva Estatutária', 0.00),"
+                            + "('3.4.1 - Ajustes a Valor Patrimonial', 0.00),"
+                            + "('3.5.1 - Previsão de Dividendos', 0.00),"
+                            + "('3.6.1 - Ajustes de Câmbio', 0.00),"
+                            + "('4.1.1 - Receitas Operacionais', 0.00),"
+                            + "('4.2.1 - Receitas Não Operacionais', 0.00),"
+                            + "('4.1.2 - Receita de Vendas', 0.00),"
+                            + "('4.1.3 - Receita de Serviços', 0.00),"
+                            + "('4.3.1 - Receitas Financeiras', 0.00),"
+                            + "('4.4.1 - Outras Receitas', 0.00),"
+                            + "('5.1.1 - Despesas Operacionais', 0.00),"
+                            + "('5.2.1 - Despesas Não Operacionais', 0.00),"
+                            + "('5.1.2 - Despesas com Compras', 0.00),"
+                            + "('5.1.3 - Despesas com Vendas', 0.00),"
+                            + "('5.1.4 - Despesas Administrativas', 0.00),"
+                            + "('5.2.2 - Despesas Financeiras', 0.00),"
+                            + "('5.2.3 - Despesas Tributárias', 0.00),"
+                            + "('5.2.4 - Despesas Operacionais Outras', 0.00),"
+                            + "('5.2.5 - Imprevisto', 0.00)";
+
+                    try (Statement insertStatement = connection.createStatement()) {
+                        insertStatement.executeUpdate(insertTotaisSQL);
+                        System.out.println("Dados iniciais inseridos na tabela totais!");
+                    }
+                }
+            }
+
+            // Insere o novo lançamento
+            try (PreparedStatement statement = connection.prepareStatement(insertSQL)) {
+                statement.setString(1, lancamento.getId().toString());
+                statement.setString(2, lancamento.getData().toString());
+                statement.setString(3, lancamento.getConta().getCodigo() + " - " + lancamento.getConta().getNome());
+                statement.setString(4, lancamento.getTipo().toString());
+                statement.setString(5, lancamento.getDescricao());
+                statement.setBigDecimal(6, lancamento.getDebito());
+                statement.setBigDecimal(7, lancamento.getCredito());
+
+                statement.executeUpdate();
+                System.out.println("Lançamento adicionado com sucesso!");
+            }
+
         } catch (SQLException e) {
             System.out.println("Erro ao adicionar o lançamento: " + e.getMessage());
         }
@@ -40,6 +123,10 @@ public class DataBaseManager {
 
     // Método para remover um lançamento do banco de dados
     public void removerLancamento(UUID id) {
+        if (!verificaSeTemDB("contasapp.db", "Não há lançamentos para excluir!")) {
+            return;
+        }
+
         String deleteSQL = "DELETE FROM lancamentos WHERE id = ?";
 
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:contasapp.db");
@@ -60,6 +147,10 @@ public class DataBaseManager {
 
     // Método para listar todos os lançamentos
     public List<Lancamento> listarTodosLancamentos() {
+        if (!verificaSeTemDB("contasapp.db", "Não há lançamentos!")) {
+            return null;
+        }
+
         List<Lancamento> lancamentos = new ArrayList<>();
         String selectSQL = "SELECT * FROM lancamentos";
 
@@ -71,11 +162,11 @@ public class DataBaseManager {
             while (resultSet.next()) {
                 UUID id = UUID.fromString(resultSet.getString("id"));
                 String dataString = resultSet.getString("data");
+                String contaString = resultSet.getString("conta");
+                String tipoString = resultSet.getString("tipo");
+                String descricao = resultSet.getString("descricao");
                 BigDecimal debito = resultSet.getBigDecimal("debito");
                 BigDecimal credito = resultSet.getBigDecimal("credito");
-                String descricao = resultSet.getString("descricao");
-                String tipoString = resultSet.getString("tipo");
-                String contaString = resultSet.getString("conta");
 
                 // Convertendo a data para LocalDate
                 java.time.LocalDate data = java.time.LocalDate.parse(dataString);
@@ -83,8 +174,8 @@ public class DataBaseManager {
                 Lancamento lancamento = new Lancamento(
                         id,
                         data,
-                        ContaContabil.valueOf(removerAcentos(contaString.toString().split(" - ")[1].toUpperCase().replace(" ", "_"))),
-                        Tipo.valueOf(removerAcentos(tipoString.toString().toUpperCase().replace(" ", "_"))),
+                        ContaContabil.valueOf(removerAcentos(contaString.split(" - ")[1].toUpperCase().replace(" ", "_"))),
+                        Tipo.valueOf(removerAcentos(tipoString.toUpperCase().replace(" ", "_"))),
                         descricao,
                         debito,
                         credito
@@ -102,6 +193,10 @@ public class DataBaseManager {
     }
 
     public Lancamento encontrarLancamentoPorId(UUID id) {
+        if (!verificaSeTemDB("contasapp.db", "Não há lançamentos!")) {
+            return null;
+        }
+
         String selectSQL = "SELECT * FROM lancamentos WHERE id = ?";
 
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:contasapp.db");
@@ -112,11 +207,11 @@ public class DataBaseManager {
 
             if (resultSet.next()) {
                 String dataString = resultSet.getString("data");
+                String contaString = resultSet.getString("conta");
+                String tipoString = resultSet.getString("tipo");
+                String descricao = resultSet.getString("descricao");
                 BigDecimal debito = resultSet.getBigDecimal("debito");
                 BigDecimal credito = resultSet.getBigDecimal("credito");
-                String descricao = resultSet.getString("descricao");
-                String tipoString = resultSet.getString("tipo");
-                String contaString = resultSet.getString("conta");
 
                 // Convertendo a data para LocalDate
                 java.time.LocalDate data = java.time.LocalDate.parse(dataString);
@@ -143,9 +238,7 @@ public class DataBaseManager {
     public void fazerBackup(String nomeArquivoBanco) {
         File arquivoOrigem = new File(nomeArquivoBanco);
 
-        if (!arquivoOrigem.exists()) {
-            JOptionPane.showMessageDialog(null, "O arquivo do banco de dados não foi encontrado!",
-                    "Erro", JOptionPane.ERROR_MESSAGE);
+        if (!verificaSeTemDB(nomeArquivoBanco, "O arquivo do banco de dados não foi encontrado!")) {
             return;
         }
 
@@ -209,6 +302,10 @@ public class DataBaseManager {
 
     // Metodo para atualizar os totais na tabela "totais"
     public void atualizarTotais(Lancamento lancamento, String acao) {
+        if (!verificaSeTemDB("contasapp.db", "Não há totais!")) {
+            return;
+        }
+
         String conta = lancamento.getConta().getCodigo() + " - " + lancamento.getConta().getNome();
         String tipoDaConta = lancamento.getConta().getTipo() + " - " + lancamento.getConta().getSubgrupo();
         BigDecimal debitoLancamento = lancamento.getDebito();
@@ -285,6 +382,10 @@ public class DataBaseManager {
 
 
     public BigDecimal buscarTotalDaConta(ContaContabil conta) {
+        if (!verificaSeTemDB("contasapp.db", "Não há total da conta")) {
+            return null;
+        }
+
         String selectSQL = "SELECT * FROM totais WHERE conta = ?";
 
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:contasapp.db");
@@ -311,6 +412,18 @@ public class DataBaseManager {
     private static String removerAcentos(String texto) {
         return Normalizer.normalize(texto, Normalizer.Form.NFD)
                 .replaceAll("[^\\p{ASCII}]", ""); // Remove caracteres não-ASCII
+    }
+
+    public boolean verificaSeTemDB(String nomeArquivoBanco, String mensagemErro) {
+        File arquivoOrigem = new File(nomeArquivoBanco);
+
+        if (!arquivoOrigem.exists()) {
+            JOptionPane.showMessageDialog(null, mensagemErro,
+                    "Erro", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
     }
 }
 
