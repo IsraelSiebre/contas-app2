@@ -5,7 +5,7 @@ import contasapp.model.lancamento.ContaContabil;
 
 import java.math.BigDecimal;
 
-public class Relatorio {
+public abstract class Relatorio {
 
     // ATIVO - CIRCULANTE
     protected BigDecimal caixa;

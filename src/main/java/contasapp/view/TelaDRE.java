@@ -11,12 +11,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 
-public class TelaDRE extends JPanel {
-
-    private final DecimalFormat df = new DecimalFormat("#,##0.00");
+public class TelaDRE extends TelaRelatorio {
 
     public TelaDRE() {
         DRE dre = new DRE();
@@ -92,37 +88,6 @@ public class TelaDRE extends JPanel {
 
         adicionarEspacamento();
 
-    }
-
-    private void adicionarSecao(String titulo) {
-        JPanel painelTitulo = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JLabel label = new JLabel(titulo);
-        label.setFont(new Font("Arial", Font.BOLD, 14));
-        label.setForeground(new Color(50, 50, 50));
-
-        painelTitulo.add(label);
-        add(painelTitulo);
-    }
-
-    private void adicionarLinha(String descricao, BigDecimal valor, boolean isNegrito) {
-        JPanel linha = new JPanel(new BorderLayout());
-        linha.setBackground(Color.WHITE);
-        linha.setBorder(BorderFactory.createEmptyBorder(2, isNegrito ? 10 : 30, 2, 10));
-
-        JLabel labelDescricao = new JLabel(descricao);
-        labelDescricao.setFont(new Font("Arial", isNegrito ? Font.BOLD : Font.PLAIN, 12));
-
-        JLabel labelValor = new JLabel("R$ " + df.format(valor));
-        labelValor.setFont(new Font("Arial", Font.PLAIN, 12));
-
-        linha.add(labelDescricao, BorderLayout.WEST);
-        linha.add(labelValor, BorderLayout.EAST);
-
-        add(linha);
-    }
-
-    private void adicionarEspacamento() {
-        add(Box.createVerticalStrut(25));
     }
 
     // Método para exportar o conteúdo para PDF
