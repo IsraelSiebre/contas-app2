@@ -20,6 +20,7 @@ public abstract class TelaRelatorio extends JPanel{
         add(painelTitulo);
     }
 
+
     protected void adicionarLinha(String descricao, BigDecimal valor, boolean isNegrito) {
         JPanel linha = new JPanel(new BorderLayout());
         linha.setBackground(Color.WHITE);

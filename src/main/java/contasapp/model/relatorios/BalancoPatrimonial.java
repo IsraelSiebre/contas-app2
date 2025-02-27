@@ -45,4 +45,12 @@ public class BalancoPatrimonial extends Relatorio {
         return this.getPatrimonioLiquido().add(this.getPassivoTotal());
     }
 
+    public BigDecimal getDisponivel() {
+        return caixa.add(bancos).add(aplicacoesFinanceiras);
+    }
+
+    public BigDecimal getEmprestimos() {
+        return emprestimosBancarios.add(emprestimosLongoPrazo);
+    }
+
 }

@@ -12,8 +12,8 @@ public class MenuPrincipal extends JFrame {
     private final JPanel painelPrincipal;
     private Image backgroundImage;
 
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 500;
+    private static final int WIDTH = 900;
+    private static final int HEIGHT = 550;
 
     public MenuPrincipal() {
         setTitle("Sistema Contábil");
@@ -112,6 +112,7 @@ public class MenuPrincipal extends JFrame {
         itemRelatorioDRE.addActionListener(_ -> abrirTela(new TelaDRE()));
         itemRelatorioBalancoPatrimonial.addActionListener(_ -> abrirTela(new TelaBalancoPatrimonial()));
         itemRelatorioBalancete.addActionListener(_ -> abrirTela(new TelaBalancete()));
+        itemRelatorioIndices.addActionListener(_ -> abrirTela(new TelaIndices()));
 
         menu.add(itemRelatorioDRE);
         menu.add(itemRelatorioBalancoPatrimonial);

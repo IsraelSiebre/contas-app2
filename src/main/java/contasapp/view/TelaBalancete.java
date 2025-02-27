@@ -73,12 +73,12 @@ public class TelaBalancete extends TelaRelatorio {
 
             for (ContaContabil conta : ContaContabil.values()) {
                 document.add(new Paragraph(conta.getCodigo() + " - " + conta.getNome())).setBold();
-                document.add(new Paragraph("Crédito: " + df.format(balancete.buscarEClassifcarSaldoDaConta(conta, "credito"))));
-                document.add(new Paragraph("Débito: " + df.format(balancete.buscarEClassifcarSaldoDaConta(conta, "debito"))));
+                document.add(new Paragraph("Crédito: R$ " + df.format(balancete.buscarEClassifcarSaldoDaConta(conta, "credito"))));
+                document.add(new Paragraph("Débito: R$ " + df.format(balancete.buscarEClassifcarSaldoDaConta(conta, "debito"))));
             }
 
             document.close();
-            JOptionPane.showMessageDialog(this, "DRE exportada com sucesso!");
+            JOptionPane.showMessageDialog(this, "Balancete exportada com sucesso!");
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(this, "Erro ao criar o arquivo PDF: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
